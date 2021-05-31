@@ -6,6 +6,8 @@
 	<string>This app needs to access location when in bckground</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Thia app needs to aceess location when in use</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to location when open and in the background.</string>	
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
