@@ -66,7 +66,7 @@ class SecondRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todos'),
+        title: Text('Courses'),
       ),
       body: ListView.builder(
         itemCount: todos.length,
