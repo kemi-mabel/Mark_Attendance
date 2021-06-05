@@ -8,6 +8,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Position _currentPosition;
+  bool isLocationSet = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            if (_currentPosition != null)
+            if (isLocationSet)
               Text(
                   "LAT: ${_currentPosition.latitude}, LNG: ${_currentPosition.longitude}"),
             TextButton(
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
         .then((Position position) {
       setState(() {
         _currentPosition = position;
+        isLocationSet = true;
       });
     }).catchError((e) {
       print(e);
