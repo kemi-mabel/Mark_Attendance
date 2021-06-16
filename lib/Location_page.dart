@@ -1,4 +1,3 @@
-// import 'package:attendance_app/camera.dart';
 import 'package:attendance_app/camerascreen/camera_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
