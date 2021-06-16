@@ -1,4 +1,5 @@
 // import 'package:attendance_app/register_camera.dart';
+import 'package:attendance_app/Register_camera.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -77,11 +78,11 @@ class RegisterPage extends StatelessWidget {
                       minWidth: double.infinity,
                       height: 60,
                       onPressed: () {
-                        // ThemeData.dark();
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => RegisterCamera()));
+                        ThemeData.dark();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterCamera()));
                       },
                       color: Colors.blue[900],
                       shape: RoundedRectangleBorder(
