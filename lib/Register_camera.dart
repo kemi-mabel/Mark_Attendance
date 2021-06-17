@@ -1,218 +1,238 @@
-// import 'package:camera/camera.dart';
-// import 'package:flutter/material.dart';
-// import 'package:path/path.dart';
-// import 'package:path_provider/path_provider.dart';
+import 'dart:async';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:attendance_app/Register_preview.dart';
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 // import '../previewscreen/preview_screen.dart';
-// import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 
-// class RegisterCamera extends StatefulWidget {
-//   @override
-//   _RegisterCameraState createState() {
-//     return _RegisterCameraState();
-//   }
-// }
+class RegisterCamera extends StatefulWidget {
+  @override
+  _RegisterCameraState createState() {
+    return _RegisterCameraState();
+  }
+}
 
-// class _RegisterCameraState extends State {
-// CameraController controller = null as CameraController;
-// List cameras = [];
-// int selectedCameraIdx = 0;
-// String imagePath = "";
+class _RegisterCameraState extends State {
+  CameraController controller = null as CameraController;
+  List cameras = [];
+  int selectedCameraIdx = 0;
+  String imagePath = "";
 
-// @override
-// void initState() {
-//   super.initState();
-//   availableCameras().then((availableCameras) {
-//     cameras = availableCameras;
+  List<String> paths = [];
+  List<Image> _image = [];
 
-//     if (cameras.length > 0) {
-//       setState(() {
-//         selectedCameraIdx = 0;
-//       });
+  var namedfile;
 
-//       _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
-//     } else {
-//       print("No camera available");
-//     }
-//   }).catchError((err) {
-//     print('Error: $err.code\nError Message: $err.message');
-//   });
-// }
+  @override
+  void initState() {
+    super.initState();
+    availableCameras().then((availableCameras) {
+      cameras = availableCameras;
 
-// Future _initCameraController(CameraDescription cameraDescription) async {
-//   if (controller != null) {
-//     await controller.dispose();
-//   }
+      if (cameras.length > 0) {
+        setState(() {
+          selectedCameraIdx = 0;
+        });
 
-//   controller = CameraController(cameraDescription, ResolutionPreset.high);
+        _initCameraController(cameras[selectedCameraIdx]).then((void v) {});
+      } else {
+        print("No camera available");
+      }
+    }).catchError((err) {
+      print('Error: $err.code\nError Message: $err.message');
+    });
+  }
 
-//   // If the controller is updated then update the UI.
-//   controller.addListener(() {
-//     if (mounted) {
-//       setState(() {});
-//     }
+  Future _initCameraController(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller.dispose();
+    }
 
-//     if (controller.value.hasError) {
-//       print('Camera error ${controller.value.errorDescription}');
-//     }
-//   });
+    controller = CameraController(cameraDescription, ResolutionPreset.high);
 
-//   try {
-//     await controller.initialize();
-//   } on CameraException catch (e) {
-//     _showCameraException(e);
-//   }
+    // If the controller is updated then update the UI.
+    controller.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
 
-//   if (mounted) {
-//     setState(() {});
-//   }
-// }
+      if (controller.value.hasError) {
+        print('Camera error ${controller.value.errorDescription}');
+      }
+    });
 
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     appBar: AppBar(
-//       title: const Text('Click To Share'),
-//       backgroundColor: Colors.blueGrey,
-//     ),
-//     body: Container(
-//       child: SafeArea(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.stretch,
-//           children: <Widget>[
-//             Expanded(
-//               flex: 1,
-//               child: _cameraPreviewWidget(),
-//             ),
-//             SizedBox(height: 10.0),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.start,
-//               children: [
-//                 _cameraTogglesRowWidget(),
-//                 _captureControlRowWidget(context),
-//                 Spacer()
-//               ],
-//             ),
-//             SizedBox(height: 20.0)
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }
+    try {
+      await controller.initialize();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+    }
 
-// /// Display Camera preview.
-// Widget _cameraPreviewWidget() {
-//   if (controller == null || !controller.value.isInitialized) {
-//     return const Text(
-//       'Loading',
-//       style: TextStyle(
-//         color: Colors.white,
-//         fontSize: 20.0,
-//         fontWeight: FontWeight.w900,
-//       ),
-//     );
-//   }
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
-//   return AspectRatio(
-//     aspectRatio: controller.value.aspectRatio,
-//     child: CameraPreview(controller),
-//   );
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Click To Share'),
+        backgroundColor: Colors.blueGrey,
+      ),
+      body: Container(
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: _cameraPreviewWidget(),
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _cameraTogglesRowWidget(),
+                  _captureControlRowWidget(context),
+                  Spacer()
+                ],
+              ),
+              SizedBox(height: 20.0)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-// /// Display the control bar with buttons to take pictures
-// Widget _captureControlRowWidget(context) {
-//   return Expanded(
-//     child: Align(
-//       alignment: Alignment.center,
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//         mainAxisSize: MainAxisSize.max,
-//         children: [
-//           FloatingActionButton(
-//               child: Icon(Icons.camera),
-//               backgroundColor: Colors.blueGrey,
-//               onPressed: () {
-//                 _onCapturePressed(context);
-//               })
-//         ],
-//       ),
-//     ),
-//   );
-// }
+  /// Display Camera preview.
+  Widget _cameraPreviewWidget() {
+    if (controller == null || !controller.value.isInitialized) {
+      return const Text(
+        'Loading',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+          fontWeight: FontWeight.w900,
+        ),
+      );
+    }
 
-// /// Display a row of toggle to select the camera (or a message if no camera is available).
-// Widget _cameraTogglesRowWidget() {
-//   if (cameras == null || cameras.isEmpty) {
-//     return Spacer();
-//   }
+    return AspectRatio(
+      aspectRatio: controller.value.aspectRatio,
+      child: CameraPreview(controller),
+    );
+  }
 
-//   CameraDescription selectedCamera = cameras[selectedCameraIdx];
-//   CameraLensDirection lensDirection = selectedCamera.lensDirection;
+  /// Display the control bar with buttons to take pictures
+  Widget _captureControlRowWidget(context) {
+    return Expanded(
+      child: Align(
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            FloatingActionButton(
+                child: Icon(Icons.camera),
+                backgroundColor: Colors.blueGrey,
+                onPressed: () {
+                  _onCapturePressed(context);
+                })
+          ],
+        ),
+      ),
+    );
+  }
 
-//   return Expanded(
-//     child: Align(
-//       alignment: Alignment.centerLeft,
-//       child: ElevatedButton.icon(
-//           onPressed: _onSwitchCamera,
-//           icon: Icon(_getCameraLensIcon(lensDirection)),
-//           label: Text(
-//               "${lensDirection.toString().substring(lensDirection.toString().indexOf('.') + 1)}")),
-//     ),
-//   );
-// }
+  /// Display a row of toggle to select the camera (or a message if no camera is available).
+  Widget _cameraTogglesRowWidget() {
+    if (cameras == null || cameras.isEmpty) {
+      return Spacer();
+    }
 
-// IconData _getCameraLensIcon(CameraLensDirection direction) {
-//   switch (direction) {
-//     case CameraLensDirection.back:
-//       return Icons.camera_rear;
-//     case CameraLensDirection.front:
-//       return Icons.camera_front;
-//     case CameraLensDirection.external:
-//       return Icons.camera;
-//     default:
-//       return Icons.device_unknown;
-//   }
-// }
+    CameraDescription selectedCamera = cameras[selectedCameraIdx];
+    CameraLensDirection lensDirection = selectedCamera.lensDirection;
 
-// void _onSwitchCamera() {
-//   selectedCameraIdx =
-//       selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
-//   CameraDescription selectedCamera = cameras[selectedCameraIdx];
-//   _initCameraController(selectedCamera);
-// }
+    return Expanded(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: ElevatedButton.icon(
+            onPressed: _onSwitchCamera,
+            icon: Icon(_getCameraLensIcon(lensDirection)),
+            label: Text(
+                "${lensDirection.toString().substring(lensDirection.toString().indexOf('.') + 1)}")),
+      ),
+    );
+  }
 
-// void _onCapturePressed(context) async {
-//   // Take the Picture in a try / catch block. If anything goes wrong,
-//   // catch the error.
-//   try {
-//     // Attempt to take a picture and log where it's been saved
-//     final path = join(
-//       // In this example, store the picture in the temp directory. Find
-//       // the temp directory using the `path_provider` plugin.
-//       (await getTemporaryDirectory()).path,
-//       '${DateTime.now()}.png',
-//     );
-//     // print(path);
-//     await controller.takePicture(path);
+  IconData _getCameraLensIcon(CameraLensDirection direction) {
+    switch (direction) {
+      case CameraLensDirection.back:
+        return Icons.camera_rear;
+      case CameraLensDirection.front:
+        return Icons.camera_front;
+      case CameraLensDirection.external:
+        return Icons.camera;
+      default:
+        return Icons.device_unknown;
+    }
+  }
 
-//     // If the picture was taken, display it on a new screen
-//     // a code to let you push the button 5 times
-//     Navigator.push(
-//       context,
-//       MaterialPageRoute(
-//         builder: (context) => PreviewImageScreen(imagePath: path),
-//       ),
-//     );
-//   } catch (e) {
-//     // If an error occurs, log the error to the console.
-//     print(e);
-//   }
-// }
+  void _onSwitchCamera() {
+    selectedCameraIdx =
+        selectedCameraIdx < cameras.length - 1 ? selectedCameraIdx + 1 : 0;
+    CameraDescription selectedCamera = cameras[selectedCameraIdx];
+    _initCameraController(selectedCamera);
+  }
 
-// void _showCameraException(CameraException e) {
-//   String errorText = 'Error: ${e.code}\nError Message: ${e.description}';
-//   print(errorText);
+  void _onCapturePressed(context) async {
+    // Take the Picture in a try / catch block. If anything goes wrong,
+    // catch the error.
+    try {
+      namedfile = '${DateTime.now()}.png';
+      // Attempt to take a picture and log where it's been saved
+      final path = join(
+        // In this example, store the picture in the temp directory. Find
+        // the temp directory using the `path_provider` plugin.
+        // (await getExternalStorageDirectory()).path,
+        (await getTemporaryDirectory()).path,
+        namedfile,
+      );
+      print(path);
+      await controller.takePicture(path);
+      paths.add(path);
+      // final myImagePath = '${directory.path}/MyImages';
+      // final myImgDir = await new Directory(myImagePath).create();
+      // _image.add(Image(namedfile.path));
 
-//   print('Error: ${e.code}\n${e.description}');
-// }
-// }
+      if (paths.length == 5) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PageImageScreen(imagePath: paths),
+          ),
+        );
+      }
+      // If the picture was taken, display it on a new screen
+      // a code to let you push the button 5 times
+
+    } catch (e) {
+      // If an error occurs, log the error to the console.
+      print(e);
+    }
+  }
+
+  void _showCameraException(CameraException e) {
+    String errorText = 'Error: ${e.code}\nError Message: ${e.description}';
+    print(errorText);
+
+    print('Error: ${e.code}\n${e.description}');
+  }
+}
