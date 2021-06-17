@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PageImageScreen extends StatefulWidget {
   final List imagePath;
@@ -33,6 +34,8 @@ class _PageImageScreenState extends State<PageImageScreen> {
 
   bool loading = false;
   double progress = 0;
+
+  static const _url = "https://esiwesregistration.000webhostapp.com/esiwesreg/";
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +73,8 @@ class _PageImageScreenState extends State<PageImageScreen> {
                         // Share.file('Share via:', basename(widget.imagePath),
                         //     bytes.buffer.asUint8List(), 'image/png');
                         // });
-                        downloadFile();
+                        // downloadFile();
+                        _launchURL();
                       },
                       child: Text(
                         'upload',
@@ -103,6 +107,10 @@ class _PageImageScreenState extends State<PageImageScreen> {
       ),
     );
   }
+
+  void _launchURL() async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
 
   Future<bool> saveImage(String url, String fileName) async {
     Directory directory;
