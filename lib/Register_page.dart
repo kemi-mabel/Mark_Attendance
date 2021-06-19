@@ -2,7 +2,13 @@
 import 'package:attendance_app/Register_camera.dart';
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  var _matController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +49,7 @@ class RegisterPage extends StatelessWidget {
                       height: 20,
                     ),
                     Text(
-                      "Welcome, Register with your correct matric number in CAPS",
+                      "Welcome, Register with your correct matric number",
                       style: TextStyle(
                         fontSize: 15,
                         color: Colors.grey[700],
@@ -58,15 +64,54 @@ class RegisterPage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Column(
                     children: [
-                      makeInput(label: "MATRIC NO"),
-                      // makeInput(label: "Password", obsureText: true),
+                      // makeInput(label: "MATRIC NO"),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "MATRIC NO",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black87),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextFormField(
+                            controller: _matController,
+                            // validator: (value) {
+                            //   if (value == null) {
+                            //     return 'Please Enter the your matric number';
+                            //   }
+                            //   return null;
+                            // },
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 10),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.grey[400]!),
+                              ),
+                              border: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.grey[400]!)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Container(
-                    padding: EdgeInsets.only(top: 3, left: 3),
+                    // padding: EdgeInsets.only(top: 1, left: 3),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(40),
                         border: Border(
@@ -79,14 +124,18 @@ class RegisterPage extends StatelessWidget {
                       height: 60,
                       onPressed: () {
                         ThemeData.dark();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RegisterCamera()));
+                        if (_matController.text.isNotEmpty) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegisterCamera(
+                                      matnumber:
+                                          _matController.text.toUpperCase())));
+                        }
                       },
                       color: Colors.blue[900],
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40)),
+                          borderRadius: BorderRadius.circular(50)),
                       child: Text(
                         "Take Picture",
                         style: TextStyle(
@@ -100,17 +149,22 @@ class RegisterPage extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                        "Ensure there is enough lighting while taking picture"),
-                    Text(
-                      "Take picture five times before uploading",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: SizedBox(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Note: Ensure there is enough lighting while taking picture, press camera button five times to take five pictures!!!",
+                          style: TextStyle(
+                              color: Colors.redAccent[700],
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 )
               ],
             ),
@@ -121,32 +175,35 @@ class RegisterPage extends StatelessWidget {
   }
 }
 
-Widget makeInput({label, obsureText = false}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-      ),
-      SizedBox(
-        height: 5,
-      ),
-      TextField(
-        obscureText: obsureText,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[400]!),
-          ),
-          border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[400]!)),
-        ),
-      ),
-      SizedBox(
-        height: 30,
-      )
-    ],
-  );
-}
+// Widget makeInput({label, obsureText = false}) {
+//   return Column(
+//     crossAxisAlignment: CrossAxisAlignment.start,
+//     children: [
+//       Text(
+//         label,
+//         style: TextStyle(
+//             fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
+//       ),
+//       SizedBox(
+//         height: 5,
+//       ),
+//       TextFormField(
+//         controller: _matController,
+//         keyboardType: TextInputType.text,
+//         textCapitalization: TextCapitalization.sentences,
+//         obscureText: obsureText,
+//         decoration: InputDecoration(
+//           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+//           enabledBorder: OutlineInputBorder(
+//             borderSide: BorderSide(color: Colors.grey[400]!),
+//           ),
+//           border: OutlineInputBorder(
+//               borderSide: BorderSide(color: Colors.grey[400]!)),
+//         ),
+//       ),
+//       SizedBox(
+//         height: 30,
+//       )
+//     ],
+//   );
+// }

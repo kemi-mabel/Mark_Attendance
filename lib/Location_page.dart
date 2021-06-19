@@ -11,7 +11,12 @@ class LocationPage extends StatefulWidget {
 }
 
 class _LocationPageState extends State<LocationPage> {
-  late Position _currentPosition;
+  // late Position _currentPosition;
+  // bool isLocationSet = false;
+
+  final double _latitudeForCalculation = 6.671543056185375;
+  final _longitudeForCalculation = 3.157386742327303;
+  Position _currentPosition = null as Position;
   bool isLocationSet = false;
 
   @override
@@ -31,6 +36,7 @@ class _LocationPageState extends State<LocationPage> {
               child: Text("Get location"),
               onPressed: () {
                 _getCurrentLocation();
+                _condition();
               },
             ),
             Align(
@@ -80,6 +86,23 @@ class _LocationPageState extends State<LocationPage> {
     });
   }
 
+  _condition() {
+    setState() {
+      double _distanceInMeters = Geolocator.distanceBetween(
+        _latitudeForCalculation,
+        _longitudeForCalculation,
+        _currentPosition.latitude,
+        _currentPosition.longitude,
+      );
+      print(_distanceInMeters);
+
+      // if (_distanceInMeters <50)  {
+      //     msg = 'We have learned FlutterRaised button example.';
+      //   } else {
+      //     msg = 'Flutter RaisedButton Example';
+      //   }
+    }
+  }
   //  _condition() {
   //   setState(() {
   //     if (_currentPosition.latitude == 3423243) && {

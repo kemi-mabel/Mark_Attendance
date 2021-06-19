@@ -1,7 +1,8 @@
 import 'package:attendance_app/Register_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// import 'dart:async';
+import 'dart:async';
 import 'Location_page.dart';
 // import 'register_camera.dart';
 
@@ -11,7 +12,9 @@ class Todo {
   Todo(this.title);
 }
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MaterialApp(
     title: 'Covenant University',
     theme: ThemeData(
@@ -25,6 +28,8 @@ void main() {
 }
 
 class FirstRoute extends StatelessWidget {
+  // final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

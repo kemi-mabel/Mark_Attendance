@@ -49,7 +49,7 @@ class _PreviewImageScreenState extends State<PreviewImageScreen> {
   }
 
   Future<ByteData> getBytesFromFile() async {
-    Uint8List bytes = File(widget.imagePath).readAsBytesSync() as Uint8List;
+    Uint8List bytes = File(widget.imagePath).readAsBytesSync();
     return ByteData.view(bytes.buffer);
   }
 }

@@ -1,32 +1,30 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:attendance_app/Register_preview.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
-// import '../previewscreen/preview_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 class RegisterCamera extends StatefulWidget {
+  final String matnumber;
+  RegisterCamera({required this.matnumber});
+
   @override
   _RegisterCameraState createState() {
-    return _RegisterCameraState();
+    return _RegisterCameraState(this.matnumber);
   }
 }
 
 class _RegisterCameraState extends State {
+  String _matNumber;
+  _RegisterCameraState(this._matNumber);
   CameraController controller = null as CameraController;
   List cameras = [];
   int selectedCameraIdx = 0;
   String imagePath = "";
 
   List<String> paths = [];
-  List<Image> _image = [];
-
   var namedfile;
 
   @override
@@ -216,7 +214,8 @@ class _RegisterCameraState extends State {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PageImageScreen(imagePath: paths),
+            builder: (context) =>
+                PageImageScreen(imagePath: paths, matricNumber: _matNumber),
           ),
         );
       }
