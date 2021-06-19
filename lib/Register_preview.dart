@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PageImageScreen extends StatefulWidget {
   final List<String> imagePath;
@@ -30,8 +31,12 @@ class _PageImageScreenState extends State<PageImageScreen> {
   bool loading = false;
   double progress = 0;
 
+<<<<<<< HEAD
   String _matricNumber;
   _PageImageScreenState(this._matricNumber);
+=======
+  static const _url = "https://esiwesregistration.000webhostapp.com/esiwesreg/";
+>>>>>>> 0b1f9c138d8e83ab2064318634a54b09f2f7b010
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +109,7 @@ class _PageImageScreenState extends State<PageImageScreen> {
     );
   }
 
+<<<<<<< HEAD
   _uploadcapturedImages(List<String> path) async {
     print(_matricNumber);
     for (int i = 0; i < path.length; i++) {
@@ -117,6 +123,34 @@ class _PageImageScreenState extends State<PageImageScreen> {
         final snackBar =
             SnackBar(content: Text('You Have Successfully Registered'));
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
+=======
+  void _launchURL() async => await canLaunch(_url)
+      ? await launch(_url)
+      : throw 'Could not launch $_url';
+
+  Future<bool> saveImage(String url, String fileName) async {
+    Directory directory;
+    try {
+      if (Platform.isAndroid) {
+        if (await _requestPermission(Permission.storage)) {
+          directory = await getExternalStorageDirectory();
+          String newPath = "";
+          print(directory);
+          List<String> paths = directory.path.split("/");
+          for (int x = 1; x < paths.length; x++) {
+            String folder = paths[x];
+            if (folder != "Android") {
+              newPath += "/" + folder;
+            } else {
+              break;
+            }
+          }
+          newPath = newPath + "/ATTApp";
+          directory = Directory(newPath);
+        } else {
+          return false;
+        }
+>>>>>>> 0b1f9c138d8e83ab2064318634a54b09f2f7b010
       } else {
         print('Error from image repo ${snapshot.state.toString()}');
         throw ('This file is not an image');
