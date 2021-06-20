@@ -80,7 +80,7 @@ class _RegisterCameraState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Click To Share'),
+        title: const Text('Take Face Picture'),
         backgroundColor: Colors.blueGrey,
       ),
       body: Container(

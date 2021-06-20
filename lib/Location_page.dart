@@ -2,9 +2,6 @@ import 'package:attendance_app/camerascreen/camera_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:camera/camera.dart';
-
 class LocationPage extends StatefulWidget {
   @override
   _LocationPageState createState() => _LocationPageState();
@@ -13,9 +10,12 @@ class LocationPage extends StatefulWidget {
 class _LocationPageState extends State<LocationPage> {
   // late Position _currentPosition;
   // bool isLocationSet = false;
+  // dorcas 6.671543056185375, 3.157386742327303
+// eie 6.675805996447509, 3.162605066975611
+// cucrid 6.672626635579447, 3.161159132518136
 
-  final double _latitudeForCalculation = 6.671543056185375;
-  final _longitudeForCalculation = 3.157386742327303;
+  final double _latitudeForCalculation = 6.675805996447509;
+  final _longitudeForCalculation = 3.162605066975611;
   Position _currentPosition = null as Position;
   bool isLocationSet = false;
 

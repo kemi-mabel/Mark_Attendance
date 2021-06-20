@@ -1,10 +1,11 @@
 import 'package:attendance_app/Register_page.dart';
+import 'package:attendance_app/camerascreen/camera_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'Location_page.dart';
-// import 'register_camera.dart';
+import 'package:geolocator/geolocator.dart';
 
 class Todo {
   final String title;
@@ -27,8 +28,27 @@ Future<void> main() async {
   ));
 }
 
-class FirstRoute extends StatelessWidget {
-  // final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+class FirstRoute extends StatefulWidget {
+  @override
+  _FirstRouteState createState() => _FirstRouteState();
+}
+
+class _FirstRouteState extends State<FirstRoute> {
+  // dorcas 6.671543056185375, 3.157386742327303
+// eie 6.675805996447509, 3.162605066975611
+// cucrid 6.672626635579447, 3.161159132518136
+
+  final double _latitudeForCalculation = 6.671514999999999;
+
+  final double _longitudeForCalculation = 3.157856666666667;
+
+  Position _currentPosition = null as Position;
+
+  bool isDistanceSet = false;
+  bool isLocationSet = false;
+
+  bool isLoading = false;
+  double _distanceInMeters = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +77,7 @@ class FirstRoute extends StatelessWidget {
                           height: 30,
                         ),
                         Text(
-                          "Thanks for coming to class, Fisrt time? please register.",
+                          "Thanks for coming to class, First time? please register.",
                           textAlign: TextAlign.center,
                           style:
                               TextStyle(color: Colors.grey[700], fontSize: 15),
@@ -94,22 +114,56 @@ class FirstRoute extends StatelessWidget {
                             color: Colors.white70),
                       ),
                     ),
+                    // isLoading
+                    //     ? Center(
+                    //         child: CircularProgressIndicator(),
+                    //       )
+                    //     : SizedBox(),
                     MaterialButton(
                       minWidth: double.infinity,
                       height: 60,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SecondRoute(
-                                    todos: List.generate(
-                                      9,
-                                      (i) => Todo(
-                                        'EIE 52$i',
+                      onPressed: () async {
+                        // isLoading = true;
+                        // DialogBuilder(context)
+                        //     .showLoadingIndicator('Getting Location...');
+                        await _condition();
+
+                        print(_distanceInMeters);
+                        if (_distanceInMeters > 10) {
+                          final snackBar = SnackBar(
+                              content:
+                                  Text('Your Location Has Been Confirmed!!!'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SecondRoute(
+                                      todos: List.generate(
+                                        9,
+                                        (i) => Todo(
+                                          'EIE 52$i',
+                                        ),
                                       ),
+                                    )),
+                          );
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title:
+                                      new Text('Why are you trying to stab?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: new Text("I'LL GO TO CLASS"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
                                     ),
-                                  )),
-                        );
+                                  ],
+                                );
+                              });
+                        }
                       },
                       color: Colors.lightBlue[900],
                       shape: RoundedRectangleBorder(
@@ -124,6 +178,127 @@ class FirstRoute extends StatelessWidget {
                     ),
                   ],
                 ))));
+  }
+
+  _getCurrentLocation() {
+    // setState(() {
+    //   isLoading = true;
+    // });
+    Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            forceAndroidLocationManager: true)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+        isLocationSet = true;
+      });
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future _condition() async {
+    await _getCurrentLocation();
+    // print(_currentPosition.latitude);
+
+    setState(() {
+      _distanceInMeters = Geolocator.distanceBetween(
+        _latitudeForCalculation,
+        _longitudeForCalculation,
+        _currentPosition.latitude,
+        _currentPosition.longitude,
+      );
+      print(_currentPosition.latitude);
+      print(_currentPosition.longitude);
+
+      // print(_distanceInMeters);
+      // if (_distanceInMeters > 70) {
+      //   isDistanceSet = true;
+      // }
+      // setState(() {
+      //   isLoading = false;
+      // });
+    });
+    // setState(() {
+    //   isLoading = false;
+    // });
+  }
+}
+
+class DialogBuilder {
+  DialogBuilder(this.context);
+
+  final BuildContext context;
+
+  void showLoadingIndicator(String text) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0))),
+              backgroundColor: Colors.black87,
+              content: LoadingIndicator(text: text),
+            ));
+      },
+    );
+  }
+
+  void hideOpenDialog() {
+    Navigator.of(context).pop();
+  }
+}
+
+class LoadingIndicator extends StatelessWidget {
+  LoadingIndicator({this.text = ''});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    var displayedText = text;
+
+    return Container(
+        padding: EdgeInsets.all(16),
+        color: Colors.black87,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _getLoadingIndicator(),
+              _getHeading(context),
+              _getText(displayedText)
+            ]));
+  }
+
+  Padding _getLoadingIndicator() {
+    return Padding(
+        child: Container(
+            child: CircularProgressIndicator(strokeWidth: 3),
+            width: 32,
+            height: 32),
+        padding: EdgeInsets.only(bottom: 16));
+  }
+
+  Widget _getHeading(context) {
+    return Padding(
+        child: Text(
+          'Please wait …',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+        padding: EdgeInsets.only(bottom: 4));
+  }
+
+  Text _getText(String displayedText) {
+    return Text(
+      displayedText,
+      style: TextStyle(color: Colors.white, fontSize: 14),
+      textAlign: TextAlign.center,
+    );
   }
 }
 
@@ -146,11 +321,12 @@ class SecondRoute extends StatelessWidget {
             // When a user taps the ListTile, navigate to the DetailScreen.
             // Notice that you're not only creating a DetailScreen, you're
             // also passing the current todo through to it.
-            onTap: () {
+            onTap: () async {
+              ThemeData.dark();
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LocationPage(),
+                  builder: (context) => CameraScreen(),
                   // Pass the arguments as part of the RouteSettings. The
                   // DetailScreen reads the arguments from these settings.
                   settings: RouteSettings(
