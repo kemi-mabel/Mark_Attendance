@@ -80,7 +80,7 @@ class _RegisterCameraState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Click To Share'),
+        title: const Text('Take Face Picture'),
         backgroundColor: Colors.blueGrey,
       ),
       body: Container(
@@ -210,7 +210,7 @@ class _RegisterCameraState extends State {
       // final myImgDir = await new Directory(myImagePath).create();
       // _image.add(Image(namedfile.path));
 
-      if (paths.length == 5) {
+      if (paths.length == 10) {
         Navigator.push(
           context,
           MaterialPageRoute(

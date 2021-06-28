@@ -87,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             //   return null;
                             // },
                             keyboardType: TextInputType.text,
-                            textCapitalization: TextCapitalization.sentences,
+                            textCapitalization: TextCapitalization.characters,
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 0, horizontal: 10),
@@ -131,6 +131,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   builder: (context) => RegisterCamera(
                                       matnumber:
                                           _matController.text.toUpperCase())));
+                        } else {
+                          final snackBar =
+                              SnackBar(content: Text('INPUT MATRIC NUMBER'));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       },
                       color: Colors.blue[900],
