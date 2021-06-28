@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'Location_page.dart';
 import 'package:geolocator/geolocator.dart';
+import 'dart:math' as Math;
 
 class Todo {
   final String title;
@@ -37,10 +38,11 @@ class _FirstRouteState extends State<FirstRoute> {
   // dorcas 6.671543056185375, 3.157386742327303
 // eie 6.675805996447509, 3.162605066975611
 // cucrid 6.672626635579447, 3.161159132518136
+//eie  6.675905, 3.162383
 
-  final double _latitudeForCalculation = 6.671514999999999;
+  final double _latitudeForCalculation = 6.675805996447509;
 
-  final double _longitudeForCalculation = 3.157856666666667;
+  final double _longitudeForCalculation = 3.162605066975611;
 
   Position _currentPosition = null as Position;
 
@@ -114,21 +116,21 @@ class _FirstRouteState extends State<FirstRoute> {
                             color: Colors.white70),
                       ),
                     ),
-                    // isLoading
-                    //     ? Center(
-                    //         child: CircularProgressIndicator(),
-                    //       )
-                    //     : SizedBox(),
+                    isLoading
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : SizedBox(),
                     MaterialButton(
                       minWidth: double.infinity,
                       height: 60,
                       onPressed: () async {
-                        // isLoading = true;
+                        isLoading = true;
                         // DialogBuilder(context)
                         //     .showLoadingIndicator('Getting Location...');
                         await _condition();
-
                         print(_distanceInMeters);
+                        isLoading = false;
                         if (_distanceInMeters > 10) {
                           final snackBar = SnackBar(
                               content:
@@ -202,12 +204,17 @@ class _FirstRouteState extends State<FirstRoute> {
     // print(_currentPosition.latitude);
 
     setState(() {
-      _distanceInMeters = Geolocator.distanceBetween(
-        _latitudeForCalculation,
-        _longitudeForCalculation,
-        _currentPosition.latitude,
-        _currentPosition.longitude,
-      );
+      _distanceInMeters = getDistanceFromLatLonInMetres(
+          _latitudeForCalculation,
+          _longitudeForCalculation,
+          _currentPosition.latitude,
+          _currentPosition.longitude);
+      // _distanceInMeters = Geolocator.distanceBetween(
+      //   _latitudeForCalculation,
+      //   _longitudeForCalculation,
+      //   _currentPosition.latitude,
+      //   _currentPosition.longitude,
+      // );
       print(_currentPosition.latitude);
       print(_currentPosition.longitude);
 
@@ -222,6 +229,24 @@ class _FirstRouteState extends State<FirstRoute> {
     // setState(() {
     //   isLoading = false;
     // });
+  }
+
+  double getDistanceFromLatLonInMetres(lat1, lon1, lat2, lon2) {
+    var R = 6371000; // Radius of the earth in metres
+    var dLat = deg2rad(lat2 - lat1); // deg2rad below
+    var dLon = deg2rad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) *
+            Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return d;
+  }
+
+  double deg2rad(deg) {
+    return deg * (Math.pi / 180);
   }
 }
 
