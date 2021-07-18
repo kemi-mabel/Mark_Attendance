@@ -7,7 +7,7 @@ class FaceRecognition {
 
   Response response = null as Response;
 
-  String rapidAPIKey = "4c2b5301ffmsh3727266ea9088f4p17b91ajsn870215d301cf";
+  String rapidAPIKey = "YOUR API KEY";
   String kairosURL = "kairosapi-karios-v1.p.rapidapi.com";
 
   FaceRecognition() {
