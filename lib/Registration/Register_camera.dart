@@ -216,7 +216,7 @@ class _RegisterCameraState extends State {
           builder: (context) => PageImageScreen(
             imagePath: paths,
             matricNumber: _matNumber,
-            imageFile: File(namedfile),
+            imageFile: File(path),
           ),
         ),
       );

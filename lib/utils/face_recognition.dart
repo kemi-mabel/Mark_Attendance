@@ -7,11 +7,13 @@ class FaceRecognition {
 
   Response response = null as Response;
 
-  String rapidAPIKey = "4c2b5301ffmsh3727266ea9088f4p17b91ajsn870215d301cf";
-  String kairosURL = "kairosapi-karios-v1.p.rapidapi.com";
+  String rapidAPIKey = "133f3f5b2bae4aef59f527b7c821a1c8";
+  String kairosURL = "api.kairos.com";
+  String appID = "adc74e5d";
 
   FaceRecognition() {
     dio.options.headers = {
+      "app_id": appID,
       "x-rapidapi-host": kairosURL,
       "x-rapidapi-key": rapidAPIKey,
       "content-type": "application/json",
@@ -23,6 +25,7 @@ class FaceRecognition {
     // TODO: Add the gallery name according to the name of the store
 
     dio.options.headers = {
+      "app_id": appID,
       "x-rapidapi-host": kairosURL,
       "x-rapidapi-key": rapidAPIKey,
       "content-type": "application/json",
@@ -32,16 +35,16 @@ class FaceRecognition {
       String base64Image = base64Encode(file.readAsBytesSync());
 
       response = await dio.post(
-        "https://kairosapi-karios-v1.p.rapidapi.com/enroll",
+        "http://api.kairos.com/enroll",
         data: {
           "image": base64Image,
           "gallery_name": "Oluwakemi",
-          "subject_id": "subjectId",
+          "subject_id": subjectId,
         },
       );
 
-      // print("INSISE TRY: ");
-      // print("RESPOSNSE: " + response.toString());
+      print("INSISE TRY: ");
+      print("RESPOSNSE: " + response.toString());
       print("YO; ${response.data.toString()}");
     } on DioError catch (e) {
       if (e.response != null) {
@@ -60,6 +63,7 @@ class FaceRecognition {
   /// Returns [true] if confidence > 65% and imageId = name
   Future<bool> recogImage(File file) async {
     dio.options.headers = {
+      "app_id": appID,
       "x-rapidapi-host": kairosURL,
       "x-rapidapi-key": rapidAPIKey,
       "content-type": "application/json",
@@ -69,14 +73,13 @@ class FaceRecognition {
       String base64Image = base64Encode(file.readAsBytesSync());
       // TODO: Receive the store name also
       response = await dio.post(
-        "https://kairosapi-karios-v1.p.rapidapi.com/recognize",
+        "http://api.kairos.com/recognize",
         data: {
-          "image": base64Image,
+          "image": file,
           "gallery_name": "Oluwakemi",
         },
       );
-      // print("RESPOSNSE: " + response.toString());
-
+      print("RESPOSNSE: " + response.toString());
     } on DioError catch (e) {
       if (e.response != null) {
         print(e.response.data);

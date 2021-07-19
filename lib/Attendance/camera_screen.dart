@@ -202,7 +202,7 @@ class _CameraScreenState extends State {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              PreviewImageScreen(imagePath: path, imageFile: File(namedfile)),
+              PreviewImageScreen(imagePath: path, imageFile: File(path)),
         ),
       );
     } catch (e) {

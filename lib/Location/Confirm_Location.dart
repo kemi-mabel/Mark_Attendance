@@ -20,6 +20,7 @@ class SecondRoute extends StatefulWidget {
 }
 
 class _SecondRouteState extends State<SecondRoute> {
+  final GeolocatorPlatform _geolocatorPlatform = GeolocatorPlatform.instance;
   final double _latitudeForCalculation = 6.675805996447509;
 
   final double _longitudeForCalculation = 3.162605066975611;
@@ -49,45 +50,47 @@ class _SecondRouteState extends State<SecondRoute> {
             // Notice that you're not only creating a DetailScreen, you're
             // also passing the current todo through to it.
             onTap: () async {
-              ThemeData.dark();
+              // ThemeData.dark();
               // isLoading = true;
               // DialogBuilder(context)
               //     .showLoadingIndicator('Confirming Location...');
-              await _condition();
-              print(_distanceInMeters);
-              if (_distanceInMeters > 10) {
-                final snackBar = SnackBar(
-                    content: Text('Your Location Has Been Confirmed!!!'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CameraScreen(),
-                    // CameraScreen(),
-                    // Pass the arguments as part of the RouteSettings. The
-                    // DetailScreen reads the arguments from these settings.
-                    settings: RouteSettings(
-                      arguments: widget.todos[index],
-                    ),
+              // await _condition();
+              // print(_currentPosition.latitude);
+
+              // print(_distanceInMeters);
+              // if (_distanceInMeters > 10) {
+              //   final snackBar = SnackBar(
+              //       content: Text('Your Location Has Been Confirmed!!!'));
+              //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CameraScreen(),
+                  // CameraScreen(),
+                  // Pass the arguments as part of the RouteSettings. The
+                  // DetailScreen reads the arguments from these settings.
+                  settings: RouteSettings(
+                    arguments: widget.todos[index],
                   ),
-                );
-              } else {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: new Text('Why are you trying to stab?'),
-                        actions: <Widget>[
-                          TextButton(
-                            child: new Text("I'LL GO TO CLASS"),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    });
-              }
+                ),
+              );
+              // } else {
+              //   showDialog(
+              //       context: context,
+              //       builder: (BuildContext context) {
+              //         return AlertDialog(
+              //           title: new Text('Why are you trying to stab?'),
+              //           actions: <Widget>[
+              //             TextButton(
+              //               child: new Text("I'LL GO TO CLASS"),
+              //               onPressed: () {
+              //                 Navigator.of(context).pop();
+              //               },
+              //             ),
+              //           ],
+              //         );
+              //       });
+              // }
             },
           );
         },
@@ -95,14 +98,16 @@ class _SecondRouteState extends State<SecondRoute> {
     );
   }
 
-  _getCurrentLocation() {
-    Geolocator.getCurrentPosition(
+  _getCurrentLocation() async {
+    await _geolocatorPlatform
+        .getCurrentPosition(
             desiredAccuracy: LocationAccuracy.best,
             forceAndroidLocationManager: true)
         .then((Position position) {
       setState(() {
         _currentPosition = position;
-        isLocationSet = true;
+        // isLocationSet = true;
+        print(_currentPosition.latitude);
       });
     }).catchError((e) {
       print(e);
@@ -110,8 +115,8 @@ class _SecondRouteState extends State<SecondRoute> {
   }
 
   Future _condition() async {
-    await _getCurrentLocation();
     // print(_currentPosition.latitude);
+    await _getCurrentLocation();
 
     setState(() {
       _distanceInMeters = getDistanceFromLatLonInMetres(
