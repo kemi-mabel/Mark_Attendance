@@ -7,9 +7,9 @@ class FaceRecognition {
 
   Response response = null as Response;
 
-  String rapidAPIKey = "133f3f5b2bae4aef59f527b7c821a1c8";
+  String rapidAPIKey = "yoo";
   String kairosURL = "api.kairos.com";
-  String appID = "adc74e5d";
+  String appID = "yoo";
 
   FaceRecognition() {
     dio.options.headers = {
