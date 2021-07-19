@@ -132,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     borderRadius: BorderRadius.circular(50)),
                 onPressed: () {
                   // ThemeData.dark();
-                  // if (_nameTextController.text.isNotEmpty)  {
+                  // if (_nameTextController.text.isNotEmpty)  { /
                   Navigator.push(
                       context,
                       MaterialPageRoute(
