@@ -1,4 +1,3 @@
-import 'package:attendance_app/Location/Confirm_Location.dart';
 import 'package:attendance_app/Register/Signup_page.dart';
 import 'package:attendance_app/utils/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -89,52 +88,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             _buildTextFieldPassword(
                                 passwordController, Icons.lock, 'Password'),
                             SizedBox(height: 30),
-                            MaterialButton(
-                              elevation: 0,
-                              minWidth: double.maxFinite,
-                              height: 50,
-                              onPressed: () {
-                                ThemeData.dark();
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignUp()));
-                              },
-                              color: logoGreen,
-                              child: Text('Register',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16)),
-                              textColor: Colors.white,
-                            ),
-                            // SizedBox(height: 20),
-                            // MaterialButton(
-                            //   minWidth: double.infinity,
-                            //   height: 60,
-                            //   onPressed: () {
-                            //     Navigator.push(
-                            //       context,
-                            //       MaterialPageRoute(
-                            //           builder: (context) => SecondRoute(
-                            //                 todos: List.generate(
-                            //                   9,
-                            //                   (i) => Courses(
-                            //                     'EIE 52$i',
-                            //                   ),
-                            //                 ),
-                            //               )),
-                            //     );
-                            //   },
-                            //   color: Colors.lightBlue[900],
-                            //   shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(40)),
-                            //   child: Text(
-                            //     "Attendance",
-                            //     style: TextStyle(
-                            //       fontWeight: FontWeight.w600,
-                            //       fontSize: 16,
-                            //     ),
-                            //   ),
-                            // ),
                             _isProcessing
                                 ? CircularProgressIndicator()
                                 : SizedBox(height: 30),
@@ -172,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    Icon(FontAwesomeIcons.google),
+                                    Icon(FontAwesomeIcons.school),
                                     SizedBox(width: 10),
                                     Text('Sign In',
                                         style: TextStyle(
@@ -180,6 +133,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ]),
                               textColor: Colors.white,
                             ),
+                            SizedBox(height: 30),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text("Don't have an account?"),
+                                  TextButton(
+                                    // elevation: 0,
+                                    // minWidth: double.maxFinite,
+                                    // height: 50,
+                                    onPressed: () {
+                                      ThemeData.dark();
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => SignUp()));
+                                    },
+                                    // color: logoGreen,
+                                    child: Text('Register',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16)),
+                                    // textColor: Colors.white,
+                                  )
+                                ]),
                             SizedBox(height: 100),
                             Align(
                               alignment: Alignment.bottomCenter,

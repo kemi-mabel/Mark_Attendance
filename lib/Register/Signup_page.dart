@@ -1,14 +1,9 @@
 import 'dart:io';
-
-import 'package:attendance_app/Registration/Register_camera.dart';
-import 'package:attendance_app/utils/face_recognition.dart';
 import 'package:attendance_app/utils/firebase_auth.dart';
 import 'package:attendance_app/utils/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'Profile_page.dart';
-
-File _image = null as File;
 
 class SignUp extends StatefulWidget {
   @override

@@ -1,4 +1,3 @@
-// import 'package:attendance_app/register_camera.dart';
 import 'package:attendance_app/Registration/Register_camera.dart';
 import 'package:flutter/material.dart';
 

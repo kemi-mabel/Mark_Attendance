@@ -44,13 +44,7 @@ dependencies:
   path_provider: ^1.2.0
   font_awesome_flutter:
   google_fonts:
-  # dcdg: ^3.1.1
-  # path_provider: ^1.1.0
-  # firebase_ml_vision: ^0.9.10
-  # tflite_flutter: ^0.4.1
-  # image: ^2.1.12
-  # flutter_camera_ml_vision: ^2.2.4
-  # 
+ 
  
 
  

@@ -2,9 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:attendance_app/utils/face_recognition.dart';
 import 'package:flutter/material.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
-import 'package:path/path.dart';
 import 'package:flutter/services.dart';
+import 'package:attendance_app/utils/form.dart';
+import 'mark_attendance.dart';
 
 class PreviewImageScreen extends StatefulWidget {
   final String imagePath;
@@ -23,12 +23,43 @@ class PreviewImageScreen extends StatefulWidget {
 
 class _PreviewImageScreenState extends State<PreviewImageScreen> {
   bool status = false;
-  FaceRecognition faceRecognition = new FaceRecognition();
+  FaceRecognition faceRecognition = FaceRecognition();
+
+  String studentId = "Your Attendance is yet to be taken";
+
+  void _submitForm() {
+    // Validate returns true if the form is valid, or false
+    // otherwise.
+    // If the form is valid, proceed.
+    FeedbackForm feedbackForm = FeedbackForm(studentId, '1');
+
+    FormController formController = FormController();
+
+    _showSnackbar("Submitting Feedback");
+
+    // Submit 'feedbackForm' and save it in Google Sheets.
+    formController.submitForm(feedbackForm, (String response) {
+      print("Response: $response");
+      if (response == FormController.STATUS_SUCCESS) {
+        // Feedback is saved succesfully in Google Sheets.
+        _showSnackbar("Attendance Uploaded");
+      } else {
+        // Error Occurred while saving data in Google Sheets.
+        _showSnackbar("Error Occurred!");
+      }
+    });
+  }
+
+  // Method to show snackbar with 'message'.
+  _showSnackbar(String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Preview'), backgroundColor: Colors.purple),
+      appBar: AppBar(title: Text('Preview'), backgroundColor: Colors.black),
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -45,20 +76,21 @@ class _PreviewImageScreenState extends State<PreviewImageScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: () async {
-                        status =
+                        Map<String, dynamic> info =
                             await faceRecognition.recogImage(widget.imageFile);
                         setState(() {
-                          status;
+                          status = info['status'];
+                          studentId = info['subjectId'];
+                          _submitForm();
                         });
-
-                        // getBytesFromFile().then((bytes) {
-                        //   Share.file('Share via:', basename(widget.imagePath),
-                        //       bytes.buffer.asUint8List(), 'image/png');}
-                        // );
                       },
                       child: Text('Send'),
                     ),
-                    status ? Text("Recognized") : Text("Not Yet Recognized")
+                    status ? Text("Recognized") : Text("Not Yet Recognized"),
+                    status
+                        ? Text(
+                            'Congratulations $studentId your attendance has been captured')
+                        : Text('$studentId'),
                   ],
                 ),
               ),
@@ -74,25 +106,9 @@ class _PreviewImageScreenState extends State<PreviewImageScreen> {
             //     )
             //   ],
             // ),
-            // Row(
-            //   children: <Widget>[
-            //     Text('Score:'),
-            //     SizedBox(width: 10.0),
-            //     Text(
-            //       '${score.toStringAsFixed(2)}%',
-            //       style: TextStyle(
-            //           color: Colors.orange, fontWeight: FontWeight.bold),
-            //     )
-            //   ],
-            // ),
           ],
         ),
       ),
     );
-  }
-
-  Future<ByteData> getBytesFromFile() async {
-    Uint8List bytes = File(widget.imagePath).readAsBytesSync();
-    return ByteData.view(bytes.buffer);
   }
 }

@@ -124,6 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Colors.white70),
               ),
             ),
+            SizedBox(height: 25.0),
             MaterialButton(
                 minWidth: MediaQuery.of(context).size.width,
                 height: 60,
@@ -154,29 +155,41 @@ class _ProfilePageState extends State<ProfilePage> {
                 )),
             _isSigningOut
                 ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        _isSigningOut = true;
-                      });
-                      await FirebaseAuth.instance.signOut();
-                      setState(() {
-                        _isSigningOut = false;
-                      });
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
-                        ),
-                      );
-                    },
-                    child: Text('Sign out'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
+                : SizedBox(height: 25.0),
+            MaterialButton(
+                // minWidth: MediaQuery.of(context).size.width,
+                // height: 60,
+                color: Colors.red[900],
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                onPressed: () async {
+                  setState(() {
+                    _isSigningOut = true;
+                  });
+                  await FirebaseAuth.instance.signOut();
+                  setState(() {
+                    _isSigningOut = false;
+                  });
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
                     ),
-                  ),
+                  );
+                },
+                child: Text(
+                  'Sign out',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Colors.white70),
+                )
+                // style: ElevatedButton.styleFrom(
+                //   primary: Colors.red,
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(30),
+                //   ),
+                // ),
+                ),
           ],
         ),
       ),

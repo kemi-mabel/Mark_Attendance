@@ -7,16 +7,15 @@ class FaceRecognition {
 
   Response response = null as Response;
 
-  String rapidAPIKey = "133f3f5b2bae4aef59f527b7c821a1c8";
+  String kairoAPIKey = "133f3f5b2bae4aef59f527b7c821a1c8";
+  String kairoId = "adc74e5d";
   String kairosURL = "api.kairos.com";
-  String appID = "adc74e5d";
 
   FaceRecognition() {
     dio.options.headers = {
-      "app_id": appID,
-      "x-rapidapi-host": kairosURL,
-      "x-rapidapi-key": rapidAPIKey,
       "content-type": "application/json",
+      "app_id": kairoId,
+      "app_key": kairoAPIKey,
     };
   }
 
@@ -25,35 +24,42 @@ class FaceRecognition {
     // TODO: Add the gallery name according to the name of the store
 
     dio.options.headers = {
-      "app_id": appID,
-      "x-rapidapi-host": kairosURL,
-      "x-rapidapi-key": rapidAPIKey,
       "content-type": "application/json",
+      "app_id": kairoId,
+      "app_key": kairoAPIKey,
     };
 
     try {
       String base64Image = base64Encode(file.readAsBytesSync());
 
       response = await dio.post(
-        "http://api.kairos.com/enroll",
+        "https://api.kairos.com/enroll",
         data: {
           "image": base64Image,
+          "subject_id": "$subjectId",
           "gallery_name": "Oluwakemi",
-          "subject_id": subjectId,
         },
       );
 
-      print("INSISE TRY: ");
-      print("RESPOSNSE: " + response.toString());
+      Map<String, dynamic> parseResponse = jsonDecode(response.toString());
+      String _status = parseResponse['images'] == null
+          ? parseResponse['Errors'][0]['Message']
+          : parseResponse['images'][0]['transaction']['status'].toString();
+
+      // // print("RESPOSNSE: " + response.toString());
+      print(_status);
       print("YO; ${response.data.toString()}");
     } on DioError catch (e) {
       if (e.response != null) {
         print(e.response.data);
         print(e.response.headers);
         print(e.response.request);
+        print(e.response.statusMessage);
+        print("Some errors due to API providers");
       } else {
         print(e.request);
         print(e.message);
+        print("API Backend Confirmed");
       }
     }
 
@@ -61,25 +67,26 @@ class FaceRecognition {
   }
 
   /// Returns [true] if confidence > 65% and imageId = name
-  Future<bool> recogImage(File file) async {
+  Future<Map<String, dynamic>> recogImage(File file) async {
+    Map<String, dynamic> screenInfo = {};
     dio.options.headers = {
-      "app_id": appID,
-      "x-rapidapi-host": kairosURL,
-      "x-rapidapi-key": rapidAPIKey,
       "content-type": "application/json",
+      "app_id": kairoId,
+      "app_key": kairoAPIKey,
     };
 
     try {
       String base64Image = base64Encode(file.readAsBytesSync());
       // TODO: Receive the store name also
       response = await dio.post(
-        "http://api.kairos.com/recognize",
+        "https://api.kairos.com/recognize",
         data: {
-          "image": file,
+          "image": base64Image,
           "gallery_name": "Oluwakemi",
         },
       );
-      print("RESPOSNSE: " + response.toString());
+      // print("RESPOSNSE: " + response.toString());
+
     } on DioError catch (e) {
       if (e.response != null) {
         print(e.response.data);
@@ -92,7 +99,9 @@ class FaceRecognition {
     }
 
     Map<String, dynamic> parseResponse = jsonDecode(response.toString());
-    if (parseResponse['images'] == null) return false;
+    if ((parseResponse['images'] == null) &&
+        (parseResponse['images'][0]['candidates'] == null))
+      return screenInfo = {'status': false, 'subjectId': 'Place try again'};
 
     String _confi =
         parseResponse['images'][0]['candidates'][0]['confidence'].toString();
@@ -100,8 +109,11 @@ class FaceRecognition {
 
     String subjectId =
         parseResponse['images'][0]['candidates'][0]['subject_id'];
-    print(subjectId);
 
-    return (confidence > 65);
+    screenInfo = {'status': (confidence > 65), 'subjectId': subjectId};
+    print(subjectId);
+    print(_confi);
+
+    return (screenInfo);
   }
 }

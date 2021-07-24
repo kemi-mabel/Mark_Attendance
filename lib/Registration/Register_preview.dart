@@ -64,6 +64,9 @@ class _PageImageScreenState extends State<PageImageScreen> {
                             .then((value) {
                           print("Uploaded");
                         });
+                        final snackBar =
+                            SnackBar(content: Text('IMAGE UPLOADED'));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         // await _uploadcapturedImage(widget.imagePath);
                         Navigator.pop(context);
                         // setState(() {
