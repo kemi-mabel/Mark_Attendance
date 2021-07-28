@@ -109,17 +109,6 @@ class _PreviewImageScreenState extends State<PreviewImageScreen> {
                 ),
               ),
             ),
-            // Row(
-            //   children: <Widget>[
-            //     Text('Desciption:'),
-            //     SizedBox(width: 10.0),
-            //     Text(
-            //       // '$description',
-            //       style: TextStyle(
-            //           color: Colors.orange, fontWeight: FontWeight.bold),
-            //     )
-            //   ],
-            // ),
           ],
         ),
       ),
