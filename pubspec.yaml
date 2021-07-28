@@ -44,6 +44,8 @@ dependencies:
   path_provider: ^1.2.0
   font_awesome_flutter:
   google_fonts:
+  csv: ^4.0.3
+  flutter_email_sender: ^2.2.0
  
  
 

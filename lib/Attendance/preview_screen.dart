@@ -27,6 +27,9 @@ class _PreviewImageScreenState extends State<PreviewImageScreen> {
 
   String studentId = "Your Attendance is yet to be taken";
 
+  late List<FeedbackForm> feedbackItems;
+// List<FeedbackForm> feedbackItems = List<FeedbackForm>();
+
   void _submitForm() {
     // Validate returns true if the form is valid, or false
     // otherwise.
@@ -54,6 +57,17 @@ class _PreviewImageScreenState extends State<PreviewImageScreen> {
   _showSnackbar(String message) {
     final snackBar = SnackBar(content: Text(message));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    FormController().getFeedbackList().then((feedbackItems) {
+      setState(() {
+        this.feedbackItems = feedbackItems;
+      });
+    });
   }
 
   @override

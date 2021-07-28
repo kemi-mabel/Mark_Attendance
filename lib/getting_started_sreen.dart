@@ -1,6 +1,6 @@
+import 'package:attendance_app/to_csv.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'Register/LoginScreen.dart';
 
 class GettingStarted extends StatefulWidget {
@@ -57,7 +57,28 @@ class GettingStartedState extends State<GettingStarted> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Get Started',
+                  Text('Get Started for Students',
+                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                  Icon(Icons.arrow_forward_ios)
+                ],
+              ),
+              textColor: Colors.white,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            MaterialButton(
+              elevation: 0,
+              height: 50,
+              onPressed: () {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => SendMail()));
+              },
+              color: Colors.indigo[800],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('Get Started for Lecturers',
                       style: TextStyle(color: Colors.white, fontSize: 20)),
                   Icon(Icons.arrow_forward_ios)
                 ],
