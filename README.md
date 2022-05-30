@@ -1,7 +1,6 @@
-# attendance_app
+# FRAMA(FACE RECOGNITION ATTTENDANCE MOBILE APPLICATION)
 
-A new Flutter project.
+A mobile application that uses face recognition and location to take class attendance in covenant University and uploads to a google sheet
 
-## Getting Started
-A mobile application that uses face recognition to take class attendance and uploads to a google sheet
-# Attendance_App
+## Pictures
+<img src="https://github.com/kemi-mabel/Mark_Attendance/blob/main/image1.jpeg" width "245" />
